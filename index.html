@@ -369,38 +369,15 @@ function renderSectorPosts(posts) {
 }
 
 // ── GEMINI API ────────────────────────────────────
-async function callGemini(prompt) {
-  const body = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
-  };
+async function callGroq(prompt) {
   const res = await fetch(WORKER_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify({ prompt })
   });
-  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `Error ${res.status}`); }
-  const data = await res.json();
-  const raw = data.candidates[0].content.parts[0].text;
-  return extractJSON(raw);
-}
-
-function extractJSON(raw) {
-  // Remove all markdown fences
-  let t = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
-  // Try direct parse first
-  try { return JSON.parse(t); } catch(e) {}
-  // Find array
-  const a1 = t.indexOf('['), a2 = t.lastIndexOf(']');
-  if (a1 !== -1 && a2 > a1) {
-    try { return JSON.parse(t.slice(a1, a2+1)); } catch(e) {}
-  }
-  // Find object
-  const o1 = t.indexOf('{'), o2 = t.lastIndexOf('}');
-  if (o1 !== -1 && o2 > o1) {
-    try { return JSON.parse(t.slice(o1, o2+1)); } catch(e) {}
-  }
-  throw new Error('Could not parse response as JSON');
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error || `Error ${res.status}`); }
+  const text = await res.text();
+  try { return JSON.parse(text); } catch(e) { throw new Error('Could not parse response'); }
 }
 
 // ── LOAD SECTOR POSTS ─────────────────────────────
@@ -413,11 +390,13 @@ async function loadSectorPosts(sector) {
   document.getElementById('sector-posts').innerHTML =
     `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
-    const posts = await callGemini(
-      `[{"author":"Name","role":"Title","date":"Mar 10, 2026","text":"post text","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral","url":"https://www.linkedin.com/search/results/content/?keywords=linkedin+viral+post"}] - Using that exact format, return a JSON array of 6 viral LinkedIn posts from the ${sector} sector. Today is March 15, 2026. All dates must be between Jan 1 2026 and Mar 15 2026. For url field use https://www.linkedin.com/search/results/content/?keywords= followed by 3 relevant keywords from the post joined with +. No explanation, no markdown, start with [ end with ].`
+    const posts = await callGroq(
+      `Return a JSON object with a "posts" array of 6 viral LinkedIn posts from the ${sector} sector. Today is March 15, 2026, use dates between Jan 1 2026 and Mar 15 2026. Each post: {"author":"Full Name","role":"Job Title at Company","date":"Mar 10, 2026","text":"2-3 sentence viral post content","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"one sentence why this went viral","url":"https://www.linkedin.com/search/results/content/?keywords=keyword1+keyword2+keyword3"}. Vary impressions between 50000 and 900000.`
     );
-    postsCache[sector] = posts;
-    renderSectorPosts(posts);
+    const postsData = posts.posts || posts;
+    const finalPosts = Array.isArray(postsData) ? postsData : (postsData.posts || []);
+    postsCache[sector] = finalPosts;
+    renderSectorPosts(finalPosts);
   } catch (e) {
     document.getElementById('sector-posts').innerHTML =
       `<div class="empty-state">Could not load posts. Try again in a moment.<br>
@@ -448,8 +427,8 @@ async function analyzeProfile() {
   document.getElementById('profile-result').innerHTML =
     `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
-    const result = await callGemini(
-      `{"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral","url":"https://www.linkedin.com/search/results/content/?keywords=linkedin+post"}]} - Using that exact format, return a JSON object for LinkedIn user ${name} with 6 viral posts. Today is March 15, 2026. All dates must be between Jan 1 2026 and Mar 15 2026. For url use https://www.linkedin.com/search/results/content/?keywords= plus 3 keywords from the post. No explanation, no markdown, start with { end with }.`
+    const result = await callGroq(
+      `Return a JSON object for LinkedIn user "${name}" with their profile and top 6 viral posts. Today is March 15, 2026, use dates between Jan 1 2026 and Mar 15 2026. Format: {"profile":{"name":"Full Name","role":"Job Title","company":"Company","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"2-3 sentence viral post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why it went viral","url":"https://www.linkedin.com/search/results/content/?keywords=keyword1+keyword2"}]}. Generate exactly 6 posts, vary impressions 20000-800000.`
     );
     profileData = result;
     renderProfilePosts(result, 'impressions');
