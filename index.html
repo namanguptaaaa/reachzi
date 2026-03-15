@@ -8,468 +8,127 @@
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;700;800;900&family=Instrument+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --rz-orange: #FF5C2A;
-  --rz-orange-soft: rgba(255,92,42,0.12);
-  --rz-orange-border: rgba(255,92,42,0.25);
-  --bg: #08080E;
-  --surface: #101018;
-  --surface2: #18181F;
-  --surface3: #1E1E28;
-  --border: rgba(255,255,255,0.06);
-  --border2: rgba(255,255,255,0.11);
-  --text: #F2F2F5;
-  --muted: rgba(242,242,245,0.42);
-  --faint: rgba(242,242,245,0.08);
+  --rz-orange: #FF5C2A; --rz-orange-soft: rgba(255,92,42,0.12); --rz-orange-border: rgba(255,92,42,0.25);
+  --bg: #08080E; --surface: #101018; --surface2: #18181F;
+  --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.11);
+  --text: #F2F2F5; --muted: rgba(242,242,245,0.42); --faint: rgba(242,242,245,0.08);
 }
-
 html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text); font-family: 'Instrument Sans', system-ui, sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Instrument Sans', system-ui, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  height: 58px;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 28px;
-  background: rgba(8,8,14,0.88);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--border);
-  z-index: 200;
-}
-
-.nav-logo {
-  display: flex; align-items: center; gap: 7px;
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 20px; font-weight: 900;
-  letter-spacing: -0.04em;
-  color: var(--text);
-}
-
-.nav-logo-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: var(--rz-orange);
-  flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(255,92,42,0.5);
-}
-
-.nav-pill {
-  font-size: 10px; font-weight: 700;
-  padding: 3px 9px; border-radius: 999px;
-  background: var(--rz-orange-soft);
-  color: var(--rz-orange);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-family: 'Instrument Sans', sans-serif;
-}
-
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; height: 58px; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; background: rgba(8,8,14,0.9); backdrop-filter: blur(18px); border-bottom: 1px solid var(--border); z-index: 200; }
+.nav-logo { display: flex; align-items: center; gap: 8px; font-family: 'Cabinet Grotesk', sans-serif; font-size: 20px; font-weight: 900; letter-spacing: -0.04em; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rz-orange); box-shadow: 0 0 10px rgba(255,92,42,0.6); flex-shrink: 0; }
+.nav-pill { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--rz-orange-soft); color: var(--rz-orange); letter-spacing: 0.06em; text-transform: uppercase; }
 .nav-right { display: flex; gap: 8px; align-items: center; }
-
-.btn-ghost {
-  font-size: 13px; padding: 7px 15px;
-  border-radius: 10px;
-  border: 1px solid var(--border2);
-  background: transparent; color: var(--muted);
-  cursor: pointer; transition: all 0.15s;
-  font-family: 'Instrument Sans', sans-serif;
-}
+.btn-ghost { font-size: 13px; padding: 7px 15px; border-radius: 10px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'Instrument Sans', sans-serif; }
 .btn-ghost:hover { background: var(--surface2); color: var(--text); }
-
-.btn-cta {
-  font-size: 13px; padding: 8px 18px;
-  border-radius: 10px; border: none;
-  background: var(--rz-orange); color: #fff;
-  cursor: pointer; transition: opacity 0.15s;
-  font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif;
-  letter-spacing: -0.01em;
-}
+.btn-cta { font-size: 13px; padding: 8px 18px; border-radius: 10px; border: none; background: var(--rz-orange); color: #fff; cursor: pointer; transition: opacity 0.15s; font-weight: 700; font-family: 'Cabinet Grotesk', sans-serif; letter-spacing: -0.01em; }
 .btn-cta:hover { opacity: 0.88; }
 
-/* ── HERO ── */
-.hero {
-  padding: 138px 28px 72px;
-  text-align: center;
-  position: relative;
-}
-
-.hero::before {
-  content: '';
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-  width: 800px; height: 500px;
-  background: radial-gradient(ellipse at top, rgba(255,92,42,0.07) 0%, transparent 65%);
-  pointer-events: none;
-}
-
-.hero-tag {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 12px; font-weight: 500; letter-spacing: 0.05em;
-  color: var(--rz-orange);
-  background: var(--rz-orange-soft);
-  border: 1px solid var(--rz-orange-border);
-  border-radius: 999px; padding: 5px 14px;
-  margin-bottom: 22px;
-}
-
-.hero h1 {
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: clamp(38px, 5.5vw, 68px);
-  font-weight: 900;
-  line-height: 1.03;
-  letter-spacing: -0.05em;
-  max-width: 740px;
-  margin: 0 auto 18px;
-}
-
-.hero h1 .highlight {
-  color: var(--rz-orange);
-  position: relative;
-}
-
-.hero-sub {
-  font-size: 16px; color: var(--muted);
-  max-width: 480px; margin: 0 auto 34px;
-  line-height: 1.65; font-weight: 300;
-}
-
+/* HERO */
+.hero { padding: 138px 28px 72px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 900px; height: 500px; background: radial-gradient(ellipse at top, rgba(255,92,42,0.08) 0%, transparent 65%); pointer-events: none; }
+.hero-tag { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 500; letter-spacing: 0.05em; color: var(--rz-orange); background: var(--rz-orange-soft); border: 1px solid var(--rz-orange-border); border-radius: 999px; padding: 5px 14px; margin-bottom: 24px; }
+.hero h1 { font-family: 'Cabinet Grotesk', sans-serif; font-size: clamp(38px, 5.5vw, 68px); font-weight: 900; line-height: 1.03; letter-spacing: -0.05em; max-width: 740px; margin: 0 auto 18px; }
+.hero h1 .hl { color: var(--rz-orange); }
+.hero-sub { font-size: 16px; color: var(--muted); max-width: 480px; margin: 0 auto 36px; line-height: 1.65; font-weight: 300; }
 .hero-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-
-.hero-btn-main {
-  font-size: 15px; padding: 12px 30px;
-  border-radius: 12px; border: none;
-  background: var(--rz-orange); color: #fff;
-  cursor: pointer; font-weight: 800;
-  font-family: 'Cabinet Grotesk', sans-serif;
-  letter-spacing: -0.02em; transition: opacity 0.15s;
-}
+.hero-btn-main { font-size: 15px; padding: 13px 32px; border-radius: 12px; border: none; background: var(--rz-orange); color: #fff; cursor: pointer; font-weight: 800; font-family: 'Cabinet Grotesk', sans-serif; letter-spacing: -0.02em; transition: opacity 0.15s; }
 .hero-btn-main:hover { opacity: 0.88; }
-
-.hero-btn-sec {
-  font-size: 14px; padding: 12px 22px;
-  border-radius: 12px;
-  border: 1px solid var(--border2);
-  background: transparent; color: var(--muted);
-  cursor: pointer; font-family: 'Instrument Sans', sans-serif;
-  transition: all 0.15s;
-}
+.hero-btn-sec { font-size: 14px; padding: 13px 24px; border-radius: 12px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'Instrument Sans', sans-serif; }
 .hero-btn-sec:hover { background: var(--surface2); color: var(--text); }
 
-/* ── API KEY BANNER ── */
-.apikey-banner {
-  max-width: 1160px; margin: 0 auto 20px;
-  background: rgba(255,92,42,0.06);
-  border: 1px solid var(--rz-orange-border);
-  border-radius: 14px; padding: 16px 20px;
-}
-
-.apikey-banner p {
-  font-size: 13px; color: rgba(242,242,245,0.6);
-  margin-bottom: 12px; line-height: 1.55;
-}
-
-.apikey-row { display: flex; gap: 8px; }
-
-.apikey-row input {
-  flex: 1; background: var(--surface2);
-  border: 1px solid var(--rz-orange-border);
-  border-radius: 10px; padding: 10px 13px;
-  color: var(--text); font-size: 12px;
-  outline: none; font-family: monospace;
-  transition: border-color 0.15s;
-}
-.apikey-row input:focus { border-color: var(--rz-orange); }
-.apikey-row input::placeholder { color: var(--muted); }
-
-.apikey-row button {
-  background: var(--rz-orange); color: #fff;
-  border: none; border-radius: 10px;
-  padding: 10px 18px; font-size: 13px; font-weight: 800;
-  cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif;
-  transition: opacity 0.15s; white-space: nowrap;
-}
-.apikey-row button:hover { opacity: 0.88; }
-
-/* ── APP CONTAINER ── */
-.app-wrap {
-  max-width: 1160px; margin: 0 auto;
-  padding: 0 24px 80px;
-}
-
-/* ── TABS ── */
-.tab-row {
-  display: flex; gap: 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 22px;
-}
-
-.tab-btn {
-  font-size: 14px; padding: 10px 18px;
-  background: none; border: none;
-  border-bottom: 2px solid transparent;
-  color: var(--muted); cursor: pointer;
-  font-family: 'Instrument Sans', sans-serif;
-  margin-bottom: -1px; transition: all 0.15s;
-}
+/* APP */
+.app-wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px 80px; }
+.tab-row { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 22px; }
+.tab-btn { font-size: 14px; padding: 10px 18px; background: none; border: none; border-bottom: 2px solid transparent; color: var(--muted); cursor: pointer; font-family: 'Instrument Sans', sans-serif; margin-bottom: -1px; transition: all 0.15s; }
 .tab-btn.active { color: var(--text); border-bottom-color: var(--rz-orange); font-weight: 500; }
 
-/* ── SECTORS ── */
+/* SECTORS */
 .sector-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
-
-.sector-btn {
-  font-size: 12px; padding: 6px 14px;
-  border-radius: 999px;
-  border: 1px solid var(--border2);
-  background: transparent; color: var(--muted);
-  cursor: pointer; transition: all 0.15s;
-  font-family: 'Instrument Sans', sans-serif;
-  white-space: nowrap;
-}
+.sector-btn { font-size: 12px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: 'Instrument Sans', sans-serif; }
 .sector-btn:hover { background: var(--surface2); color: var(--text); }
-.sector-btn.active {
-  background: var(--rz-orange-soft);
-  border-color: var(--rz-orange-border);
-  color: var(--rz-orange); font-weight: 500;
-}
+.sector-btn.active { background: var(--rz-orange-soft); border-color: var(--rz-orange-border); color: var(--rz-orange); font-weight: 500; }
 
-/* ── SORT ROW ── */
+/* SORT */
 .sort-row { display: flex; align-items: center; gap: 7px; margin-bottom: 18px; flex-wrap: wrap; }
 .sort-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
-
-.sort-btn {
-  font-size: 11px; padding: 4px 12px;
-  border-radius: 999px; border: 1px solid var(--border2);
-  background: transparent; color: var(--muted);
-  cursor: pointer; transition: all 0.15s;
-  font-family: 'Instrument Sans', sans-serif;
-}
+.sort-btn { font-size: 11px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; font-family: 'Instrument Sans', sans-serif; }
 .sort-btn:hover { background: var(--surface2); color: var(--text); }
 .sort-btn.active { background: var(--rz-orange-soft); border-color: var(--rz-orange-border); color: var(--rz-orange); }
 
-/* ── PROFILE SEARCH ── */
+/* PROFILE SEARCH */
 .profile-search { display: flex; gap: 8px; margin-bottom: 22px; }
-
-.profile-search input {
-  flex: 1; background: var(--surface2);
-  border: 1px solid var(--border2); border-radius: 12px;
-  padding: 11px 15px; color: var(--text); font-size: 13px;
-  outline: none; font-family: 'Instrument Sans', sans-serif;
-  transition: border-color 0.15s;
-}
+.profile-search input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 12px; padding: 11px 15px; color: var(--text); font-size: 13px; outline: none; font-family: 'Instrument Sans', sans-serif; transition: border-color 0.15s; }
 .profile-search input:focus { border-color: var(--rz-orange-border); }
 .profile-search input::placeholder { color: var(--muted); }
-
-.profile-search button {
-  background: var(--rz-orange); color: #fff;
-  border: none; border-radius: 12px;
-  padding: 11px 20px; font-size: 13px; font-weight: 800;
-  cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif;
-  transition: opacity 0.15s; white-space: nowrap;
-}
+.profile-search button { background: var(--rz-orange); color: #fff; border: none; border-radius: 12px; padding: 11px 20px; font-size: 13px; font-weight: 800; cursor: pointer; font-family: 'Cabinet Grotesk', sans-serif; white-space: nowrap; transition: opacity 0.15s; }
 .profile-search button:hover { opacity: 0.88; }
 
-/* ── POSTS GRID ── */
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 14px;
-}
-
-.post-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 18px;
-  transition: border-color 0.15s, transform 0.15s;
-  display: flex; flex-direction: column; gap: 10px;
-}
+/* POSTS GRID */
+.posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+.post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 18px; transition: border-color 0.15s, transform 0.15s; display: flex; flex-direction: column; gap: 10px; }
 .post-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-
 .post-header { display: flex; align-items: center; justify-content: space-between; }
-
 .post-author-wrap { display: flex; align-items: center; gap: 9px; }
-
-.avatar {
-  width: 34px; height: 34px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 800; flex-shrink: 0;
-  font-family: 'Cabinet Grotesk', sans-serif;
-}
-
+.avatar { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; font-family: 'Cabinet Grotesk', sans-serif; }
 .post-author { font-size: 13px; font-weight: 500; color: var(--text); }
-.post-role   { font-size: 11px; color: var(--muted); margin-top: 1px; }
-
-.rank-badge {
-  font-size: 11px; font-weight: 800; padding: 3px 9px;
-  border-radius: 999px; flex-shrink: 0;
-  font-family: 'Cabinet Grotesk', sans-serif;
-}
+.post-role { font-size: 11px; color: var(--muted); margin-top: 1px; }
+.rank-badge { font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px; font-family: 'Cabinet Grotesk', sans-serif; flex-shrink: 0; }
 .rk-1 { background: rgba(251,191,36,0.14); color: #fbbf24; }
 .rk-2 { background: rgba(178,183,191,0.14); color: #b2b7bf; }
-.rk-3 { background: rgba(205,127,50,0.14);  color: #cd7f32; }
+.rk-3 { background: rgba(205,127,50,0.14); color: #cd7f32; }
 .rk-n { background: var(--faint); color: var(--muted); }
-
 .post-date { font-size: 11px; color: var(--muted); }
-
-.post-text {
-  font-size: 13px; color: rgba(242,242,245,0.75);
-  line-height: 1.58;
-  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
-}
-
-.post-hook {
-  font-size: 11.5px; color: rgba(255,92,42,0.7);
-  background: rgba(255,92,42,0.06);
-  border-radius: 8px; padding: 7px 10px; line-height: 1.45;
-}
-
+.post-text { font-size: 13px; color: rgba(242,242,245,0.75); line-height: 1.58; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.post-hook { font-size: 11.5px; color: rgba(255,92,42,0.75); background: rgba(255,92,42,0.06); border-radius: 8px; padding: 7px 10px; line-height: 1.45; }
 .imp-bar { height: 3px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
 .imp-fill { height: 100%; background: linear-gradient(90deg, var(--rz-orange), #FF8C60); border-radius: 999px; transition: width 0.5s ease; }
-
-.post-stats {
-  display: flex; gap: 10px; flex-wrap: wrap;
-  font-size: 11px; color: var(--muted);
-}
+.post-stats { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--muted); }
 .eng-rate { margin-left: auto; color: rgba(255,92,42,0.7); font-weight: 600; }
 
-/* ── PROFILE CARD ── */
-.profile-info-card {
-  background: rgba(255,92,42,0.05);
-  border: 1px solid var(--rz-orange-border);
-  border-radius: 16px; padding: 18px;
-  margin-bottom: 18px;
-  display: flex; align-items: center; gap: 16px;
-}
+/* PROFILE INFO */
+.profile-info-card { background: rgba(255,92,42,0.05); border: 1px solid var(--rz-orange-border); border-radius: 16px; padding: 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 16px; }
+.profile-avatar-lg { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; background: var(--rz-orange-soft); color: var(--rz-orange); flex-shrink: 0; font-family: 'Cabinet Grotesk', sans-serif; }
+.profile-name { font-size: 16px; font-weight: 700; margin-bottom: 3px; font-family: 'Cabinet Grotesk', sans-serif; }
+.profile-role { font-size: 12px; color: var(--muted); }
+.profile-meta { display: flex; gap: 12px; margin-top: 6px; font-size: 11px; color: var(--muted); }
+.profile-sector { display: inline-block; margin-top: 7px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 9px; border-radius: 999px; background: var(--rz-orange-soft); color: var(--rz-orange); }
 
-.profile-avatar-lg {
-  width: 52px; height: 52px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 17px; font-weight: 900;
-  background: var(--rz-orange-soft); color: var(--rz-orange);
-  flex-shrink: 0; font-family: 'Cabinet Grotesk', sans-serif;
-}
-
-.profile-name  { font-size: 16px; font-weight: 700; margin-bottom: 3px; font-family: 'Cabinet Grotesk', sans-serif; }
-.profile-role  { font-size: 12px; color: var(--muted); }
-.profile-meta  { display: flex; gap: 12px; margin-top: 6px; font-size: 11px; color: var(--muted); }
-.profile-sector {
-  display: inline-block; margin-top: 7px;
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-  padding: 3px 9px; border-radius: 999px;
-  background: var(--rz-orange-soft); color: var(--rz-orange);
-}
-
-/* ── LOADING / EMPTY ── */
-.loading-state {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; padding: 56px 24px; gap: 14px;
-  color: var(--muted); font-size: 13px;
-}
-
-.spinner {
-  width: 24px; height: 24px;
-  border: 2px solid rgba(255,255,255,0.07);
-  border-top-color: var(--rz-orange);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-
+/* STATES */
+.loading-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 64px 24px; gap: 14px; color: var(--muted); font-size: 13px; }
+.spinner { width: 24px; height: 24px; border: 2px solid rgba(255,255,255,0.07); border-top-color: var(--rz-orange); border-radius: 50%; animation: spin 0.7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { padding: 56px 24px; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.6; }
 
-.empty-state {
-  padding: 48px 24px; text-align: center;
-  color: var(--muted); font-size: 13px; line-height: 1.6;
-}
-
-/* ── FEATURES ── */
-.features {
-  padding: 70px 28px;
-  max-width: 1160px; margin: 0 auto;
-}
-
-.section-eyebrow {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; color: var(--rz-orange);
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-family: 'Cabinet Grotesk', sans-serif;
-  font-size: 34px; font-weight: 900; letter-spacing: -0.04em;
-  margin-bottom: 8px;
-}
-
+/* FEATURES */
+.features { padding: 72px 28px; max-width: 1160px; margin: 0 auto; }
+.section-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--rz-orange); margin-bottom: 12px; }
+.section-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 34px; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 8px; }
 .section-sub { font-size: 15px; color: var(--muted); font-weight: 300; }
-
-.features-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 14px; margin-top: 40px;
-}
-
-.feature-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 22px;
-  transition: border-color 0.2s, transform 0.2s;
-}
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin-top: 40px; }
+.feature-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px; transition: border-color 0.2s, transform 0.2s; }
 .feature-card:hover { border-color: var(--border2); transform: translateY(-2px); }
-
-.feature-icon {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: var(--rz-orange-soft);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; margin-bottom: 14px;
-}
-
+.feature-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--rz-orange-soft); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 14px; }
 .feature-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 15px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.02em; }
-.feature-desc  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.feature-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-/* ── INSTALL ── */
+/* INSTALL */
 .install-wrap { padding: 0 28px 80px; }
-
-.install-card {
-  max-width: 620px; margin: 0 auto;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 20px; padding: 36px;
-}
-
+.install-card { max-width: 620px; margin: 0 auto; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 36px; }
 .install-title { font-family: 'Cabinet Grotesk', sans-serif; font-size: 26px; font-weight: 900; letter-spacing: -0.04em; margin-bottom: 10px; }
 .install-sub { font-size: 14px; color: var(--muted); margin-bottom: 26px; line-height: 1.6; }
-
 .install-steps { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+.step { display: flex; gap: 13px; align-items: flex-start; font-size: 13px; color: rgba(242,242,245,0.72); line-height: 1.5; }
+.step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--rz-orange-soft); color: var(--rz-orange); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; flex-shrink: 0; font-family: 'Cabinet Grotesk', sans-serif; }
+code { background: var(--surface2); padding: 2px 7px; border-radius: 5px; font-size: 11px; color: var(--rz-orange); }
 
-.step {
-  display: flex; gap: 13px; align-items: flex-start;
-  font-size: 13px; color: rgba(242,242,245,0.72); line-height: 1.5;
-}
-
-.step-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--rz-orange-soft); color: var(--rz-orange);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 900; flex-shrink: 0;
-  font-family: 'Cabinet Grotesk', sans-serif;
-}
-
-code {
-  background: var(--surface2); padding: 2px 7px;
-  border-radius: 5px; font-size: 11px; color: var(--rz-orange);
-}
-
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 28px; text-align: center;
-  font-size: 12px; color: var(--muted);
-}
-
+footer { border-top: 1px solid var(--border); padding: 28px; text-align: center; font-size: 12px; color: var(--muted); }
 footer span { color: var(--rz-orange); }
 
-/* ── RESPONSIVE ── */
 @media (max-width: 700px) {
   nav { padding: 0 16px; }
   .hero { padding: 110px 16px 56px; }
@@ -485,21 +144,21 @@ footer span { color: var(--rz-orange); }
 <!-- NAV -->
 <nav>
   <div class="nav-logo">
-    <div class="nav-logo-dot"></div>
+    <div class="nav-dot"></div>
     Reachzi
-    <span class="nav-pill">Beta</span>
+    <span class="nav-pill">Free</span>
   </div>
   <div class="nav-right">
     <button class="btn-ghost" onclick="document.getElementById('install').scrollIntoView({behavior:'smooth'})">Chrome extension</button>
-    <button class="btn-cta" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Try free →</button>
+    <button class="btn-cta" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Try it free →</button>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-tag">⚡ AI-powered LinkedIn intelligence</div>
-  <h1>See what <span class="highlight">actually</span> reaches people on LinkedIn</h1>
-  <p class="hero-sub">Reachzi ranks LinkedIn posts by real impression count — by sector, by profile, sorted highest to lowest. Know what works before you post.</p>
+  <div class="hero-tag">⚡ Free LinkedIn intelligence tool</div>
+  <h1>See what <span class="hl">actually</span> reaches people on LinkedIn</h1>
+  <p class="hero-sub">Reachzi ranks LinkedIn posts by impression count — by sector or by profile. Know what works before you write a single word.</p>
   <div class="hero-btns">
     <button class="hero-btn-main" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Launch Reachzi →</button>
     <button class="hero-btn-sec" onclick="document.getElementById('install').scrollIntoView({behavior:'smooth'})">Get Chrome extension</button>
@@ -507,18 +166,17 @@ footer span { color: var(--rz-orange); }
 </section>
 
 <!-- APP -->
-<section id="app" style="max-width:1160px;margin:0 auto;padding:0 24px 20px">
+<section id="app" class="app-wrap">
 
-  <!-- API key banner -->
-  <div class="apikey-banner" id="apikey-banner">
-    <p>🔑 Reachzi runs on Claude AI. Paste your Anthropic API key to activate — it's stored only in your browser, never on our servers. Get one free at <a href="https://console.anthropic.com" target="_blank" style="color:var(--rz-orange)">console.anthropic.com</a></p>
-    <div class="apikey-row">
-      <input type="password" id="apikey-input" placeholder="sk-ant-api03-..." />
-      <button onclick="saveApiKey()">Activate Reachzi</button>
+  <!-- Usage bar -->
+  <div style="display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:11px 16px;margin-bottom:20px;flex-wrap:wrap;">
+    <span style="font-size:13px;color:var(--muted)"><strong id="usage-used" style="color:var(--text)">0</strong> / 50 lookups today</span>
+    <div style="flex:1;min-width:80px;height:4px;background:var(--faint);border-radius:999px;overflow:hidden">
+      <div id="usage-fill" style="height:100%;width:0%;background:var(--rz-orange);border-radius:999px;transition:width 0.4s,background 0.3s"></div>
     </div>
+    <span id="usage-left" style="font-size:12px;color:var(--muted);white-space:nowrap">50 left today</span>
   </div>
 
-  <!-- Tabs -->
   <div class="tab-row">
     <button class="tab-btn active" id="tab-sector" onclick="switchTab('sector')">Browse by sector</button>
     <button class="tab-btn" id="tab-profile" onclick="switchTab('profile')">Analyze a profile</button>
@@ -539,50 +197,25 @@ footer span { color: var(--rz-orange); }
   <!-- Profile view -->
   <div id="view-profile" style="display:none">
     <div class="profile-search">
-      <input id="profile-input" placeholder="Type any LinkedIn creator name — e.g. Justin Welsh, Lara Acosta, Gary Vee..." onkeydown="if(event.key==='Enter') analyzeProfile()" />
+      <input id="profile-input" placeholder="Enter any LinkedIn creator — e.g. Justin Welsh, Lara Acosta, Gary Vee..." onkeydown="if(event.key==='Enter') analyzeProfile()" />
       <button onclick="analyzeProfile()">Analyze →</button>
     </div>
     <div id="profile-result"></div>
   </div>
-
 </section>
 
 <!-- FEATURES -->
 <section class="features">
   <div class="section-eyebrow">Why Reachzi</div>
   <div class="section-title">Built for people who post with purpose</div>
-  <div class="section-sub">Research viral content before writing a single word.</div>
+  <div class="section-sub">Research what goes viral before writing a single word.</div>
   <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">📊</div>
-      <div class="feature-title">Ranked by impressions</div>
-      <div class="feature-desc">Every post sorted #1 → #6 from highest to lowest impression count. No guessing.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔍</div>
-      <div class="feature-title">12 sectors covered</div>
-      <div class="feature-desc">AI & Tech, Marketing, Sales, Finance, SaaS, HR, Health, Creator Economy and more.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">👤</div>
-      <div class="feature-title">Profile deep-dive</div>
-      <div class="feature-desc">Enter any creator's name to see their top posts ranked by reach, with engagement rate.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💡</div>
-      <div class="feature-title">Viral hook analysis</div>
-      <div class="feature-desc">Each post shows exactly why it resonated — the hook, the structure, the trigger.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🧩</div>
-      <div class="feature-title">Chrome extension</div>
-      <div class="feature-desc">Visit any LinkedIn profile and the Reachzi sidebar auto-loads — zero clicks needed.</div>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔒</div>
-      <div class="feature-title">Private by design</div>
-      <div class="feature-desc">Your API key stays in your browser. Reachzi never stores or transmits your credentials.</div>
-    </div>
+    <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Ranked by impressions</div><div class="feature-desc">Posts sorted #1 to #6 by reach — not just likes or comments.</div></div>
+    <div class="feature-card"><div class="feature-icon">🔍</div><div class="feature-title">12 sectors covered</div><div class="feature-desc">AI & Tech, Marketing, Sales, Finance, SaaS, HR, Health, Creator Economy and more.</div></div>
+    <div class="feature-card"><div class="feature-icon">👤</div><div class="feature-title">Profile deep-dive</div><div class="feature-desc">Enter any creator's name to see their top posts ranked by reach.</div></div>
+    <div class="feature-card"><div class="feature-icon">💡</div><div class="feature-title">Viral hook analysis</div><div class="feature-desc">Each post explains exactly why it resonated with the audience.</div></div>
+    <div class="feature-card"><div class="feature-icon">🧩</div><div class="feature-title">Chrome extension</div><div class="feature-desc">Sidebar auto-loads on any LinkedIn profile you visit — zero clicks.</div></div>
+    <div class="feature-card"><div class="feature-icon">🆓</div><div class="feature-title">Completely free</div><div class="feature-desc">No account needed. No credit card. Just open and start exploring.</div></div>
   </div>
 </section>
 
@@ -591,49 +224,70 @@ footer span { color: var(--rz-orange); }
   <div class="install-card">
     <div class="section-eyebrow">Chrome extension</div>
     <div class="install-title">Auto-loads on every LinkedIn profile</div>
-    <div class="install-sub">Once installed, the Reachzi sidebar appears automatically whenever you visit a LinkedIn profile — no clicking, no copy-pasting.</div>
+    <div class="install-sub">Once installed, the Reachzi sidebar appears automatically whenever you visit a LinkedIn profile — no clicking needed.</div>
     <div class="install-steps">
-      <div class="step"><div class="step-num">1</div><span>Download the <strong>Reachzi extension ZIP</strong> from this page and unzip it</span></div>
-      <div class="step"><div class="step-num">2</div><span>Open Chrome and go to <code>chrome://extensions</code> — turn on <strong>Developer Mode</strong> (top-right toggle)</span></div>
-      <div class="step"><div class="step-num">3</div><span>Click <strong>"Load unpacked"</strong> and select the <code>extension/</code> folder</span></div>
-      <div class="step"><div class="step-num">4</div><span>Click the Reachzi icon in your toolbar and paste your Anthropic API key</span></div>
-      <div class="step"><div class="step-num">5</div><span>Visit any <code>linkedin.com/in/username</code> — the sidebar loads automatically ⚡</span></div>
+      <div class="step"><div class="step-num">1</div><span>Download the Reachzi extension ZIP and unzip it</span></div>
+      <div class="step"><div class="step-num">2</div><span>Open Chrome → go to <code>chrome://extensions</code> → enable Developer Mode</span></div>
+      <div class="step"><div class="step-num">3</div><span>Click <strong>"Load unpacked"</strong> → select the <code>extension/</code> folder</span></div>
+      <div class="step"><div class="step-num">4</div><span>Click the Reachzi icon → paste your Anthropic API key</span></div>
+      <div class="step"><div class="step-num">5</div><span>Visit any <code>linkedin.com/in/username</code> — sidebar loads automatically ⚡</span></div>
     </div>
-    <button class="btn-cta" style="width:100%;padding:13px;font-size:14px">Download Reachzi extension ↓</button>
+    <button class="btn-cta" style="width:100%;padding:13px;font-size:14px">Download extension ↓</button>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
-  <strong style="font-family:'Cabinet Grotesk',sans-serif;letter-spacing:-0.03em">Reachzi</strong> — LinkedIn viral post intelligence · Powered by <span>Claude AI</span> · Your API key never leaves your browser
+  <strong style="font-family:'Cabinet Grotesk',sans-serif;letter-spacing:-0.03em">Reachzi</strong> — LinkedIn viral post intelligence · Powered by <span>Gemini AI</span> · 100% free · No account needed
 </footer>
+
+<!-- ═══════════════════════════════════════
+     ONLY THING TO CHANGE: YOUR GEMINI KEY
+═══════════════════════════════════════ -->
+<script>
+const GEMINI_API_KEY = 'AIzaSyDwU-VHIQhwLLdcsB4IJeyssSOz-ueiyUA';
+</script>
 
 <script>
 const SECTORS = ['AI & Tech','Marketing','Sales','Finance','Leadership','Startups','HR & Talent','Product','Health','Creator Economy','SaaS','Real Estate'];
-const AV_BG  = ['rgba(255,92,42,0.12)','rgba(99,179,237,0.12)','rgba(167,139,250,0.12)','rgba(251,191,36,0.12)','rgba(52,211,153,0.12)','rgba(248,113,113,0.12)'];
-const AV_CLR = ['#FF5C2A','#63b3ed','#a78bfa','#fbbf24','#34d399','#f87171'];
+const AV_BG   = ['rgba(255,92,42,0.12)','rgba(99,179,237,0.12)','rgba(167,139,250,0.12)','rgba(251,191,36,0.12)','rgba(52,211,153,0.12)','rgba(248,113,113,0.12)'];
+const AV_CLR  = ['#FF5C2A','#63b3ed','#a78bfa','#fbbf24','#34d399','#f87171'];
+const DAILY_LIMIT = 50;
 
-let apiKey = localStorage.getItem('rz_api_key') || '';
 let currentSector = 'AI & Tech';
-let currentSort = 'impressions';
-let postsCache = {};
-let profileData = null;
+let currentSort   = 'impressions';
+let postsCache    = {};
+let profileData   = null;
+
+// ── USAGE TRACKING ────────────────────────────────
+function getUsage() {
+  const today = new Date().toISOString().slice(0,10);
+  const s = JSON.parse(localStorage.getItem('rz_usage') || '{}');
+  if (s.date !== today) return { date: today, count: 0 };
+  return s;
+}
+function incrementUsage() {
+  const u = getUsage(); u.count++;
+  localStorage.setItem('rz_usage', JSON.stringify(u));
+  updateUsageBar(); return u.count;
+}
+function isLimitReached() { return getUsage().count >= DAILY_LIMIT; }
+function updateUsageBar() {
+  const used = getUsage().count;
+  const pct  = Math.min((used / DAILY_LIMIT) * 100, 100);
+  const left = Math.max(DAILY_LIMIT - used, 0);
+  document.getElementById('usage-used').textContent = used;
+  document.getElementById('usage-fill').style.width = `${pct}%`;
+  document.getElementById('usage-fill').style.background = pct >= 100 ? '#f87171' : pct >= 80 ? '#fbbf24' : 'var(--rz-orange)';
+  document.getElementById('usage-left').textContent = left > 0 ? `${left} left today` : 'Limit reached — resets at midnight';
+}
 
 window.addEventListener('DOMContentLoaded', () => {
-  if (apiKey) document.getElementById('apikey-banner').style.display = 'none';
   initSectors();
+  updateUsageBar();
   loadSectorPosts(currentSector);
 });
 
-function saveApiKey() {
-  const k = document.getElementById('apikey-input').value.trim();
-  if (!k) return;
-  apiKey = k;
-  localStorage.setItem('rz_api_key', k);
-  document.getElementById('apikey-banner').style.display = 'none';
-  if (!postsCache[currentSector]) loadSectorPosts(currentSector);
-}
-
+// ── TABS ──────────────────────────────────────────
 function switchTab(t) {
   document.getElementById('tab-sector').classList.toggle('active', t === 'sector');
   document.getElementById('tab-profile').classList.toggle('active', t === 'profile');
@@ -641,9 +295,10 @@ function switchTab(t) {
   document.getElementById('view-profile').style.display = t === 'profile' ? '' : 'none';
 }
 
+// ── SECTORS ───────────────────────────────────────
 function initSectors() {
   document.getElementById('sector-btns').innerHTML = SECTORS.map(s =>
-    `<button class="sector-btn${s===currentSector?' active':''}" onclick="selectSector('${s}')">${s}</button>`
+    `<button class="sector-btn${s === currentSector ? ' active' : ''}" onclick="selectSector('${s}')">${s}</button>`
   ).join('');
 }
 
@@ -654,6 +309,7 @@ function selectSector(s) {
   loadSectorPosts(s);
 }
 
+// ── SORT ──────────────────────────────────────────
 function setSort(by, btn) {
   currentSort = by;
   document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
@@ -663,24 +319,27 @@ function setSort(by, btn) {
 
 function sortPosts(posts) {
   const p = [...posts];
-  if (currentSort === 'impressions') return p.sort((a,b) => b.impressions - a.impressions);
-  if (currentSort === 'engagement')  return p.sort((a,b) => (b.likes+b.comments+b.reposts)-(a.likes+a.comments+a.reposts));
-  return p.sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (currentSort === 'impressions') return p.sort((a, b) => b.impressions - a.impressions);
+  if (currentSort === 'engagement')  return p.sort((a, b) => (b.likes + b.comments + b.reposts) - (a.likes + a.comments + a.reposts));
+  return p.sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 
+// ── HELPERS ───────────────────────────────────────
 function rankClass(i) { return i===0?'rk-1':i===1?'rk-2':i===2?'rk-3':'rk-n'; }
 
-function postCardHTML(p, i, maxImp, initials, authorName, authorRole) {
+function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
+
+function postCardHTML(p, i, maxImp, avInitials, authorName, authorRole) {
   const pct = Math.round((p.impressions / maxImp) * 100);
-  const eng = ((p.likes+p.comments+p.reposts)/p.impressions*100).toFixed(1);
+  const eng = ((p.likes + p.comments + p.reposts) / p.impressions * 100).toFixed(1);
   const ci  = i % AV_BG.length;
   return `<div class="post-card">
     <div class="post-header">
       <div class="post-author-wrap">
-        <div class="avatar" style="background:${AV_BG[ci]};color:${AV_CLR[ci]}">${initials}</div>
+        <div class="avatar" style="background:${AV_BG[ci]};color:${AV_CLR[ci]}">${avInitials}</div>
         <div><div class="post-author">${authorName}</div><div class="post-role">${authorRole}</div></div>
       </div>
-      <span class="rank-badge ${rankClass(i)}">#${i+1}</span>
+      <span class="rank-badge ${rankClass(i)}">#${i + 1}</span>
     </div>
     <div class="post-date">${p.date}</div>
     <p class="post-text">${p.text}</p>
@@ -699,81 +358,107 @@ function postCardHTML(p, i, maxImp, initials, authorName, authorRole) {
 function renderSectorPosts(posts) {
   const sorted = sortPosts(posts);
   const maxImp = Math.max(...sorted.map(p => p.impressions));
-  document.getElementById('sector-posts').innerHTML = `<div class="posts-grid">${
-    sorted.map((p, i) => {
-      const initials = p.author.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
-      return postCardHTML(p, i, maxImp, initials, p.author, p.role);
-    }).join('')
-  }</div>`;
+  document.getElementById('sector-posts').innerHTML = `<div class="posts-grid">
+    ${sorted.map((p, i) => postCardHTML(p, i, maxImp, initials(p.author), p.author, p.role)).join('')}
+  </div>`;
 }
 
-async function callAPI(prompt) {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1400,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
-  if (!res.ok) {
-    const e = await res.json();
-    throw new Error(e.error?.message || `API error ${res.status}`);
-  }
+// ── GEMINI API ────────────────────────────────────
+async function callGemini(prompt) {
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.9, maxOutputTokens: 1400 }
+      })
+    }
+  );
+  if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `Error ${res.status}`); }
   const data = await res.json();
-  return JSON.parse(data.content[0].text.replace(/```json|```/g,'').trim());
+  const text = data.candidates[0].content.parts[0].text;
+  return JSON.parse(text.replace(/```json|```/g, '').trim());
 }
 
+// ── LOAD SECTOR POSTS ─────────────────────────────
 async function loadSectorPosts(sector) {
-  if (!apiKey) {
-    document.getElementById('sector-posts').innerHTML = `<div class="empty-state">Add your Anthropic API key above to load viral posts.</div>`;
+  if (isLimitReached()) {
+    document.getElementById('sector-posts').innerHTML = `<div class="empty-state">You've used all 50 free lookups for today ⚡<br><small style="opacity:0.5;margin-top:6px;display:block">Resets at midnight. Come back tomorrow!</small></div>`;
     return;
   }
-  document.getElementById('sector-posts').innerHTML = `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
+  incrementUsage();
+  document.getElementById('sector-posts').innerHTML =
+    `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
-    const posts = await callAPI(`Generate 6 realistic viral LinkedIn posts from the "${sector}" sector posted in the last 3 months. Return ONLY a valid JSON array, no markdown, no preamble. Each object must have: { "author": "Full Name", "role": "Job Title at Company", "date": "MMM DD, YYYY", "text": "2-3 sentences of realistic viral LinkedIn post content", "impressions": integer between 50000 and 900000, "likes": integer, "comments": integer, "reposts": integer, "hook": "one sentence explaining why this went viral" }. Make impressions vary widely across all 6 posts.`);
+    const posts = await callGemini(
+      `Generate 6 realistic viral LinkedIn posts from the "${sector}" sector posted in the last 3 months.
+      Return ONLY a valid JSON array, no markdown, no explanation.
+      Each object must have exactly these fields:
+      { "author": "Full Name", "role": "Job Title at Company", "date": "MMM DD, YYYY",
+        "text": "2-3 sentences of realistic viral LinkedIn post content",
+        "impressions": integer between 50000 and 900000,
+        "likes": integer, "comments": integer, "reposts": integer,
+        "hook": "one sentence explaining why this went viral" }
+      Make impressions vary widely across all 6 posts.`
+    );
     postsCache[sector] = posts;
     renderSectorPosts(posts);
-  } catch(e) {
-    document.getElementById('sector-posts').innerHTML = `<div class="empty-state">Could not load posts. Check your API key and try again.<br><small style="opacity:0.5;font-size:11px;margin-top:6px;display:block">${e.message}</small></div>`;
+  } catch (e) {
+    document.getElementById('sector-posts').innerHTML =
+      `<div class="empty-state">Could not load posts. Try again in a moment.<br>
+      <small style="opacity:0.4;font-size:11px;margin-top:6px;display:block">${e.message}</small></div>`;
   }
 }
 
+// ── ANALYZE PROFILE ───────────────────────────────
 async function analyzeProfile() {
   const name = document.getElementById('profile-input').value.trim();
   if (!name) return;
-  if (!apiKey) {
-    document.getElementById('profile-result').innerHTML = `<div class="empty-state">Add your Anthropic API key above first.</div>`;
+  if (isLimitReached()) {
+    document.getElementById('profile-result').innerHTML = `<div class="empty-state">You've used all 50 free lookups for today ⚡<br><small style="opacity:0.5;margin-top:6px;display:block">Resets at midnight. Come back tomorrow!</small></div>`;
     return;
   }
-  document.getElementById('profile-result').innerHTML = `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
+  incrementUsage();
+  document.getElementById('profile-result').innerHTML =
+    `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
-    const result = await callAPI(`Generate a realistic LinkedIn profile analysis for someone named "${name}" with their top 6 viral posts. Return ONLY valid JSON, no markdown. Exact format: { "profile": { "name": "string", "role": "string", "company": "string", "sector": "string", "followers": integer, "following": integer }, "posts": [ { "date": "MMM DD, YYYY", "text": "2-3 sentences of realistic viral LinkedIn content", "impressions": integer between 20000 and 800000, "likes": integer, "comments": integer, "reposts": integer, "hook": "one sentence why it went viral" } ] }. Vary impressions widely across all 6 posts.`);
+    const result = await callGemini(
+      `Generate a realistic LinkedIn profile analysis for someone named "${name}" with their top 6 viral posts.
+      Return ONLY valid JSON, no markdown, no explanation.
+      Exact format:
+      { "profile": { "name": "string", "role": "string", "company": "string", "sector": "string",
+          "followers": integer, "following": integer },
+        "posts": [ { "date": "MMM DD, YYYY", "text": "2-3 sentences viral LinkedIn post",
+          "impressions": integer between 20000 and 800000,
+          "likes": integer, "comments": integer, "reposts": integer,
+          "hook": "one sentence why it went viral" } ] }
+      Generate exactly 6 posts. Vary impressions widely.`
+    );
     profileData = result;
     renderProfilePosts(result, 'impressions');
-  } catch(e) {
-    document.getElementById('profile-result').innerHTML = `<div class="empty-state">Could not load profile. ${e.message}</div>`;
+  } catch (e) {
+    document.getElementById('profile-result').innerHTML =
+      `<div class="empty-state">Could not load profile. Try again.<br>
+      <small style="opacity:0.4;font-size:11px;margin-top:6px;display:block">${e.message}</small></div>`;
   }
 }
 
+// ── RENDER PROFILE POSTS ──────────────────────────
 function renderProfilePosts(result, sortBy) {
   const { profile, posts } = result;
-  const sorted = [...posts].sort((a,b) => {
-    if (sortBy==='impressions') return b.impressions - a.impressions;
-    if (sortBy==='engagement')  return (b.likes+b.comments+b.reposts)-(a.likes+a.comments+a.reposts);
+  const sorted = [...posts].sort((a, b) => {
+    if (sortBy === 'impressions') return b.impressions - a.impressions;
+    if (sortBy === 'engagement')  return (b.likes + b.comments + b.reposts) - (a.likes + a.comments + a.reposts);
     return new Date(b.date) - new Date(a.date);
   });
-  const maxImp = Math.max(...sorted.map(p => p.impressions));
-  const initials = profile.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  const maxImp  = Math.max(...sorted.map(p => p.impressions));
+  const av      = initials(profile.name);
+
   document.getElementById('profile-result').innerHTML = `
     <div class="profile-info-card">
-      <div class="profile-avatar-lg">${initials}</div>
+      <div class="profile-avatar-lg">${av}</div>
       <div>
         <div class="profile-name">${profile.name}</div>
         <div class="profile-role">${profile.role} · ${profile.company}</div>
@@ -792,9 +477,10 @@ function renderProfilePosts(result, sortBy) {
       <button class="sort-btn${sortBy==='recent'?' active':''}" onclick="renderProfilePosts(profileData,'recent')">Recent</button>
     </div>
     <div class="posts-grid">
-      ${sorted.map((p, i) => postCardHTML(p, i, maxImp, initials, profile.name, profile.role)).join('')}
+      ${sorted.map((p, i) => postCardHTML(p, i, maxImp, av, profile.name, profile.role)).join('')}
     </div>`;
 }
 </script>
 </body>
 </html>
+
