@@ -364,15 +364,10 @@ function renderSectorPosts(posts) {
 }
 
 // ── GEMINI API ────────────────────────────────────
-async function callGemini(prompt, schema) {
+async function callGemini(prompt) {
   const body = {
     contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: {
-      temperature: 0.9,
-      maxOutputTokens: 2048,
-      responseMimeType: 'application/json',
-      responseSchema: schema
-    }
+    generationConfig: { temperature: 0.9, maxOutputTokens: 2048 }
   };
   const res = await fetch(WORKER_URL, {
     method: 'POST',
@@ -382,6 +377,11 @@ async function callGemini(prompt, schema) {
   if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `Error ${res.status}`); }
   const data = await res.json();
   const text = data.candidates[0].content.parts[0].text;
+  // Extract JSON from response
+  const arr = text.indexOf('['), arrE = text.lastIndexOf(']');
+  const obj = text.indexOf('{'), objE = text.lastIndexOf('}');
+  if (arr !== -1 && arrE > arr) return JSON.parse(text.slice(arr, arrE + 1));
+  if (obj !== -1 && objE > obj) return JSON.parse(text.slice(obj, objE + 1));
   return JSON.parse(text);
 }
 
@@ -395,27 +395,8 @@ async function loadSectorPosts(sector) {
   document.getElementById('sector-posts').innerHTML =
     `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
-    const sectorSchema = {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          author:      { type: 'string' },
-          role:        { type: 'string' },
-          date:        { type: 'string' },
-          text:        { type: 'string' },
-          impressions: { type: 'integer' },
-          likes:       { type: 'integer' },
-          comments:    { type: 'integer' },
-          reposts:     { type: 'integer' },
-          hook:        { type: 'string' }
-        },
-        required: ['author','role','date','text','impressions','likes','comments','reposts','hook']
-      }
-    };
     const posts = await callGemini(
-      `Generate 6 realistic viral LinkedIn posts from the "${sector}" sector posted in the last 3 months. Each post should have a realistic author, role, date in "Mar 10, 2026" format, 2-3 sentence post text, impression count between 50000 and 900000, likes, comments, reposts, and a one-sentence hook explaining why it went viral. Vary impressions widely.`,
-      sectorSchema
+      `Return ONLY a JSON array, no explanation. Generate 6 viral LinkedIn posts from "${sector}" sector. Each item: {"author":"Name","role":"Title at Company","date":"Mar 10, 2026","text":"2-3 sentence post","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral"}. Vary impressions 50000-900000.`
     );
     postsCache[sector] = posts;
     renderSectorPosts(posts);
@@ -438,43 +419,8 @@ async function analyzeProfile() {
   document.getElementById('profile-result').innerHTML =
     `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
-    const profileSchema = {
-      type: 'object',
-      properties: {
-        profile: {
-          type: 'object',
-          properties: {
-            name:      { type: 'string' },
-            role:      { type: 'string' },
-            company:   { type: 'string' },
-            sector:    { type: 'string' },
-            followers: { type: 'integer' },
-            following: { type: 'integer' }
-          },
-          required: ['name','role','company','sector','followers','following']
-        },
-        posts: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              date:        { type: 'string' },
-              text:        { type: 'string' },
-              impressions: { type: 'integer' },
-              likes:       { type: 'integer' },
-              comments:    { type: 'integer' },
-              reposts:     { type: 'integer' },
-              hook:        { type: 'string' }
-            },
-            required: ['date','text','impressions','likes','comments','reposts','hook']
-          }
-        }
-      },
-      required: ['profile','posts']
-    };
     const result = await callGemini(
-      `Generate a realistic LinkedIn profile and their top 6 viral posts for someone named "${name}". Include their role, company, sector, follower count, and following count. Each post should have a date in "Mar 10, 2026" format, 2-3 sentence post text, impressions between 20000 and 800000, likes, comments, reposts, and a hook. Vary impressions widely across all 6 posts.`,
-      profileSchema
+      `Return ONLY a JSON object, no explanation. Generate LinkedIn profile for "${name}": {"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"2-3 sentence post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral"}]}. Generate exactly 6 posts, vary impressions 20000-800000.`
     );
     profileData = result;
     renderProfilePosts(result, 'impressions');
