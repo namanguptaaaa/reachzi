@@ -367,7 +367,7 @@ function renderSectorPosts(posts) {
 async function callGemini(prompt) {
   const body = {
     contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.9, maxOutputTokens: 2048 }
+    generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
   };
   const res = await fetch(WORKER_URL, {
     method: 'POST',
@@ -376,13 +376,26 @@ async function callGemini(prompt) {
   });
   if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `Error ${res.status}`); }
   const data = await res.json();
-  const text = data.candidates[0].content.parts[0].text;
-  // Extract JSON from response
-  const arr = text.indexOf('['), arrE = text.lastIndexOf(']');
-  const obj = text.indexOf('{'), objE = text.lastIndexOf('}');
-  if (arr !== -1 && arrE > arr) return JSON.parse(text.slice(arr, arrE + 1));
-  if (obj !== -1 && objE > obj) return JSON.parse(text.slice(obj, objE + 1));
-  return JSON.parse(text);
+  const raw = data.candidates[0].content.parts[0].text;
+  return extractJSON(raw);
+}
+
+function extractJSON(raw) {
+  // Remove all markdown fences
+  let t = raw.replace(/```json/gi,'').replace(/```/g,'').trim();
+  // Try direct parse first
+  try { return JSON.parse(t); } catch(e) {}
+  // Find array
+  const a1 = t.indexOf('['), a2 = t.lastIndexOf(']');
+  if (a1 !== -1 && a2 > a1) {
+    try { return JSON.parse(t.slice(a1, a2+1)); } catch(e) {}
+  }
+  // Find object
+  const o1 = t.indexOf('{'), o2 = t.lastIndexOf('}');
+  if (o1 !== -1 && o2 > o1) {
+    try { return JSON.parse(t.slice(o1, o2+1)); } catch(e) {}
+  }
+  throw new Error('Could not parse response as JSON');
 }
 
 // ── LOAD SECTOR POSTS ─────────────────────────────
@@ -396,7 +409,7 @@ async function loadSectorPosts(sector) {
     `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
     const posts = await callGemini(
-      `Return ONLY a JSON array, no explanation. Generate 6 viral LinkedIn posts from "${sector}" sector. Each item: {"author":"Name","role":"Title at Company","date":"Mar 10, 2026","text":"2-3 sentence post","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral"}. Vary impressions 50000-900000.`
+      `[{"author":"Name","role":"Title","date":"Mar 10, 2026","text":"post text","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral"}] - Using that exact format, return a JSON array of 6 viral LinkedIn posts from the ${sector} sector. No explanation, no markdown, start with [ end with ].`
     );
     postsCache[sector] = posts;
     renderSectorPosts(posts);
@@ -420,7 +433,7 @@ async function analyzeProfile() {
     `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
     const result = await callGemini(
-      `Return ONLY a JSON object, no explanation. Generate LinkedIn profile for "${name}": {"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"2-3 sentence post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral"}]}. Generate exactly 6 posts, vary impressions 20000-800000.`
+      `{"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral"}]} - Using that exact format, return a JSON object for LinkedIn user ${name} with 6 viral posts. No explanation, no markdown, start with { end with }.`
     );
     profileData = result;
     renderProfilePosts(result, 'impressions');
@@ -433,7 +446,10 @@ async function analyzeProfile() {
 
 // ── RENDER PROFILE POSTS ──────────────────────────
 function renderProfilePosts(result, sortBy) {
-  const { profile, posts } = result;
+  // Handle both {profile, posts} and direct array
+  const profile = result.profile || { name: 'Unknown', role: '', company: '', sector: '', followers: 0, following: 0 };
+  const posts = result.posts || (Array.isArray(result) ? result : []);
+  if (!posts.length) { document.getElementById('profile-result').innerHTML = `<div class="empty-state">No posts found. Try again.</div>`; return; }
   const sorted = [...posts].sort((a, b) => {
     if (sortBy === 'impressions') return b.impressions - a.impressions;
     if (sortBy === 'engagement')  return (b.likes + b.comments + b.reposts) - (a.likes + a.comments + a.reposts);
