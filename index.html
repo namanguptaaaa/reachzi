@@ -401,15 +401,10 @@ async function loadSectorPosts(sector) {
     `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
     const posts = await callGemini(
-      `Generate 6 realistic viral LinkedIn posts from the "${sector}" sector posted in the last 3 months.
-      Return ONLY a valid JSON array, no markdown, no explanation.
-      Each object must have exactly these fields:
-      { "author": "Full Name", "role": "Job Title at Company", "date": "MMM DD, YYYY",
-        "text": "2-3 sentences of realistic viral LinkedIn post content",
-        "impressions": integer between 50000 and 900000,
-        "likes": integer, "comments": integer, "reposts": integer,
-        "hook": "one sentence explaining why this went viral" }
-      Make impressions vary widely across all 6 posts.`
+      `You are a JSON API. Return ONLY a raw JSON array with no markdown, no backticks, no explanation, no text before or after.
+      Generate 6 realistic viral LinkedIn posts from the "${sector}" sector from the last 3 months.
+      Format: [{"author":"Full Name","role":"Job Title at Company","date":"Mar 10, 2026","text":"2-3 sentence viral post","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why it went viral"}]
+      Vary impressions between 50000 and 900000. Output the JSON array only, starting with [ and ending with ].`
     );
     postsCache[sector] = posts;
     renderSectorPosts(posts);
@@ -433,16 +428,10 @@ async function analyzeProfile() {
     `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
     const result = await callGemini(
-      `Generate a realistic LinkedIn profile analysis for someone named "${name}" with their top 6 viral posts.
-      Return ONLY valid JSON, no markdown, no explanation.
-      Exact format:
-      { "profile": { "name": "string", "role": "string", "company": "string", "sector": "string",
-          "followers": integer, "following": integer },
-        "posts": [ { "date": "MMM DD, YYYY", "text": "2-3 sentences viral LinkedIn post",
-          "impressions": integer between 20000 and 800000,
-          "likes": integer, "comments": integer, "reposts": integer,
-          "hook": "one sentence why it went viral" } ] }
-      Generate exactly 6 posts. Vary impressions widely.`
+      `You are a JSON API. Return ONLY a raw JSON object with no markdown, no backticks, no explanation, no text before or after.
+      Generate a LinkedIn profile and top 6 viral posts for "${name}".
+      Format: {"profile":{"name":"Full Name","role":"Job Title","company":"Company","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"2-3 sentence viral post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why it went viral"}]}
+      Generate exactly 6 posts. Vary impressions between 20000 and 800000. Output JSON only, starting with { and ending with }.`
     );
     profileData = result;
     renderProfilePosts(result, 'impressions');
