@@ -197,7 +197,7 @@ footer span { color: var(--rz-orange); }
   <!-- Profile view -->
   <div id="view-profile" style="display:none">
     <div class="profile-search">
-      <input id="profile-input" placeholder="Enter any LinkedIn creator — e.g. Justin Welsh, Lara Acosta, Gary Vee..." onkeydown="if(event.key==='Enter') analyzeProfile()" />
+      <input id="profile-input" placeholder="Paste LinkedIn URL (linkedin.com/in/username) or type a name..." onkeydown="if(event.key==='Enter') analyzeProfile()" />
       <button onclick="analyzeProfile()">Analyze →</button>
     </div>
     <div id="profile-result"></div>
@@ -321,7 +321,11 @@ function sortPosts(posts) {
   const p = [...posts];
   if (currentSort === 'impressions') return p.sort((a, b) => b.impressions - a.impressions);
   if (currentSort === 'engagement')  return p.sort((a, b) => (b.likes + b.comments + b.reposts) - (a.likes + a.comments + a.reposts));
-  return p.sort((a, b) => new Date(b.date) - new Date(a.date));
+  if (currentSort === 'recent') return p.sort((a, b) => {
+    const da = new Date(a.date), db = new Date(b.date);
+    return (isNaN(db) ? 0 : db) - (isNaN(da) ? 0 : da);
+  });
+  return p;
 }
 
 // ── HELPERS ───────────────────────────────────────
@@ -333,7 +337,8 @@ function postCardHTML(p, i, maxImp, avInitials, authorName, authorRole) {
   const pct = Math.round((p.impressions / maxImp) * 100);
   const eng = ((p.likes + p.comments + p.reposts) / p.impressions * 100).toFixed(1);
   const ci  = i % AV_BG.length;
-  return `<div class="post-card">
+  const postUrl = p.url || `https://www.linkedin.com/search/results/content/?keywords=${encodeURIComponent(authorName)}`;
+  return `<div class="post-card" onclick="window.open('${postUrl}','_blank')" style="cursor:pointer">
     <div class="post-header">
       <div class="post-author-wrap">
         <div class="avatar" style="background:${AV_BG[ci]};color:${AV_CLR[ci]}">${avInitials}</div>
@@ -409,7 +414,7 @@ async function loadSectorPosts(sector) {
     `<div class="loading-state"><div class="spinner"></div><span>Finding top posts in ${sector}...</span></div>`;
   try {
     const posts = await callGemini(
-      `[{"author":"Name","role":"Title","date":"Mar 10, 2026","text":"post text","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral"}] - Using that exact format, return a JSON array of 6 viral LinkedIn posts from the ${sector} sector. No explanation, no markdown, start with [ end with ].`
+      `[{"author":"Name","role":"Title","date":"Mar 10, 2026","text":"post text","impressions":250000,"likes":3200,"comments":180,"reposts":95,"hook":"why viral","url":"https://www.linkedin.com/search/results/content/?keywords=linkedin+viral+post"}] - Using that exact format, return a JSON array of 6 viral LinkedIn posts from the ${sector} sector. Today is March 15, 2026. All dates must be between Jan 1 2026 and Mar 15 2026. For url field use https://www.linkedin.com/search/results/content/?keywords= followed by 3 relevant keywords from the post joined with +. No explanation, no markdown, start with [ end with ].`
     );
     postsCache[sector] = posts;
     renderSectorPosts(posts);
@@ -422,8 +427,19 @@ async function loadSectorPosts(sector) {
 
 // ── ANALYZE PROFILE ───────────────────────────────
 async function analyzeProfile() {
-  const name = document.getElementById('profile-input').value.trim();
-  if (!name) return;
+  let input = document.getElementById('profile-input').value.trim();
+  if (!input) return;
+
+  // Extract name or handle from LinkedIn URL
+  let name = input;
+  let handle = '';
+  const urlMatch = input.match(/linkedin\.com\/in\/([^\/\?]+)/i);
+  if (urlMatch) {
+    handle = urlMatch[1];
+    // Convert handle like "jatin-saini" to "Jatin Saini"
+    name = handle.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
   if (isLimitReached()) {
     document.getElementById('profile-result').innerHTML = `<div class="empty-state">You've used all 50 free lookups for today ⚡<br><small style="opacity:0.5;margin-top:6px;display:block">Resets at midnight. Come back tomorrow!</small></div>`;
     return;
@@ -433,7 +449,7 @@ async function analyzeProfile() {
     `<div class="loading-state"><div class="spinner"></div><span>Analyzing ${name}'s top posts...</span></div>`;
   try {
     const result = await callGemini(
-      `{"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral"}]} - Using that exact format, return a JSON object for LinkedIn user ${name} with 6 viral posts. No explanation, no markdown, start with { end with }.`
+      `{"profile":{"name":"Name","role":"Title","company":"Co","sector":"Industry","followers":45000,"following":1200},"posts":[{"date":"Mar 10, 2026","text":"post","impressions":320000,"likes":4100,"comments":210,"reposts":130,"hook":"why viral","url":"https://www.linkedin.com/search/results/content/?keywords=linkedin+post"}]} - Using that exact format, return a JSON object for LinkedIn user ${name} with 6 viral posts. Today is March 15, 2026. All dates must be between Jan 1 2026 and Mar 15 2026. For url use https://www.linkedin.com/search/results/content/?keywords= plus 3 keywords from the post. No explanation, no markdown, start with { end with }.`
     );
     profileData = result;
     renderProfilePosts(result, 'impressions');
