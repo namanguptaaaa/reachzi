@@ -244,7 +244,7 @@ footer span { color: var(--rz-orange); }
      ONLY THING TO CHANGE: YOUR GEMINI KEY
 ═══════════════════════════════════════ -->
 <script>
-const GEMINI_API_KEY = 'AIzaSyDwU-VHIQhwLLdcsB4IJeyssSOz-ueiyUA';
+const WORKER_URL = 'https://reachzi.namanguptaaaa.workers.dev';
 </script>
 
 <script>
@@ -374,10 +374,11 @@ async function callGemini(prompt, schema) {
       responseSchema: schema
     }
   };
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-  );
+  const res = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
   if (!res.ok) { const e = await res.json(); throw new Error(e.error?.message || `Error ${res.status}`); }
   const data = await res.json();
   const text = data.candidates[0].content.parts[0].text;
